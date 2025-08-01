@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hochzeits-Bingo</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1 / 1;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .bingo-cell {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            font-size: clamp(10px, 2vw, 16px);
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .bingo-cell.marked {
+            background-color: #ffd700;
+            color: #fff;
+            font-weight: bold;
+        }
+        h1 {
+            color: #e91e63;
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 30px;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hochzeits-Bingo</h1>
+    <p>Markiere die Felder, wenn du die Wörter oder Sätze hörst.</p>
+    <div class="bingo-grid" id="bingo-grid"></div>
+
+    <script>
+        const words = [
+            "\"Schatz\" (Braut)",
+            "\"Ich liebe dich\" (Bräutigam)",
+            "\"Wunderschön\" (Braut)",
+            "\"Wahnsinn\" (Bräutigam)",
+            "\"Ich kann es kaum glauben\" (Braut)",
+            "\"Oh mein Gott\" (Braut)",
+            "\"Endlich!\" (Bräutigam)",
+            "\"Unsere Hochzeit\" (Braut)",
+            "Das Buffet ist eröffnet",
+            "Jemand macht ein Selfie",
+            "Eine Rede beginnt",
+            "\"Ich bin so aufgeregt\" (Braut)",
+            "\"Ich bin so glücklich\" (Bräutigam)",
+            "Das Brautpaar küsst sich",
+            "\"Danke, dass du da bist\" (Braut)",
+            "\"Prost!\" (Bräutigam)",
+            "Die Braut wirft den Strauß",
+            "Der Hochzeitstanz beginnt",
+            "\"Das ist der schönste Tag meines Lebens\" (Braut)",
+            "Jemand stößt auf das Brautpaar an",
+            "\"Unglaublich\" (Bräutigam)",
+            "\"Lass uns tanzen\" (Bräutigam)",
+            "Das Brautpaar schneidet die Torte an",
+            "\"Perfekt\" (Braut)"
+        ];
+
+        const freeSpaceText = "FREE";
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function createBingoGrid() {
+            const grid = document.getElementById('bingo-grid');
+            const shuffledWords = shuffleArray([...words]);
+            const cells = [];
+
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('bingo-cell');
+                
+                if (i === 12) {
+                    cell.textContent = freeSpaceText;
+                    cell.classList.add('marked');
+                } else {
+                    const word = shuffledWords.pop();
+                    cell.textContent = word.replace(/\s+\(Braut\)/, '').replace(/\s+\(Bräutigam\)/, '');
+                    cell.addEventListener('click', () => {
+                        cell.classList.toggle('marked');
+                    });
+                }
+                cells.push(cell);
+            }
+
+            cells.forEach(cell => grid.appendChild(cell));
+        }
+
+        createBingoGrid();
+    </script>
+</body>
+</html>
